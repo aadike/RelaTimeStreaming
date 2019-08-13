@@ -42,15 +42,7 @@ Object ClickStreamApplication {
 		
 		// Hbase configuration
 		ssc.checkpoint(directory="hdfs://quickstart.cloudera:8020/WebClickData")
-		
-		inputMsg.foreachRDD(rdd => if(!rdd.isEmpty()) rdd.foreach(toHbase(_))
-		
-		// start application
-		ssc.start()
-		ssc.awaitTermination()
-	}
-	
-	// write to Hbase
+		// write to Hbase
 		def toHbase(row: (_)): Unit = {
 			val hConf = new HBaseConfiguration
 			hConf.set("hbase.zookeeper.quorum" "localhost:2181")
@@ -76,6 +68,13 @@ Object ClickStreamApplication {
 			hTable.put(p)
 		}
 		
+		inputMsg.foreachRDD(rdd => if(!rdd.isEmpty()) rdd.foreach(toHbase(_))
+
+		// start application
+		ssc.start()
+		ssc.awaitTermination()
+	}
+
 	case class WebClick(session_id: String,
 				event: String,
 				partner_id: String,
